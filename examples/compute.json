@@ -1,0 +1,9 @@
+{
+  "T1": 10.0,
+  "f": 0.02,
+  "n": 8,
+  "rounds": 20,
+  "payload_mb": 1,
+  "bandwidth_MBps": 100,
+  "latency_ms": 1
+}

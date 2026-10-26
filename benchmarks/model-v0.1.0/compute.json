@@ -1,0 +1,55 @@
+{
+  "model": "homogeneous-node communication estimate; assumed inputs",
+  "formula": "T_n=T1*(f+(1-f)/n)+rounds*(latency_ms/1000+payload_mb/bandwidth_MBps); n=1 communication=0",
+  "units": "payload and bandwidth use decimal MB; latency in ms; time in seconds",
+  "cases": {
+    "fast_network": {
+      "parameters": {
+        "T1": 10.0,
+        "f": 0.02,
+        "n": 8,
+        "rounds": 20,
+        "payload_mb": 1,
+        "bandwidth_MBps": 100,
+        "latency_ms": 1
+      },
+      "time_s": 1.6449999999999998,
+      "speedup": 6.079027355623101,
+      "efficiency": 0.7598784194528876,
+      "serial_bound_s": 1.4249999999999998,
+      "communication_s": 0.21999999999999997
+    },
+    "slow_network": {
+      "parameters": {
+        "T1": 10.0,
+        "f": 0.02,
+        "n": 8,
+        "rounds": 20,
+        "payload_mb": 1,
+        "bandwidth_MBps": 5,
+        "latency_ms": 20
+      },
+      "time_s": 5.825,
+      "speedup": 1.7167381974248928,
+      "efficiency": 0.2145922746781116,
+      "serial_bound_s": 1.4249999999999998,
+      "communication_s": 4.4
+    },
+    "communication_heavy": {
+      "parameters": {
+        "T1": 10.0,
+        "f": 0.02,
+        "n": 8,
+        "rounds": 100,
+        "payload_mb": 16,
+        "bandwidth_MBps": 10,
+        "latency_ms": 20
+      },
+      "time_s": 163.425,
+      "speedup": 0.06119014838610983,
+      "efficiency": 0.007648768548263729,
+      "serial_bound_s": 1.4249999999999998,
+      "communication_s": 162.0
+    }
+  }
+}

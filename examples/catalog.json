@@ -1,0 +1,13 @@
+{
+  "modules": [
+    {"id": "sense-a", "type": "sensor", "capabilities": ["perception", "mapping"], "interface": "bus-v1", "power_w": 2.0, "status": "ready"},
+    {"id": "sense-b", "type": "sensor", "capabilities": ["perception"], "interface": "bus-v1", "power_w": 2.5, "status": "ready"},
+    {"id": "compute-a", "type": "compute", "capabilities": ["planning", "mapping"], "interface": "bus-v1", "power_w": 4.0, "status": "ready"},
+    {"id": "actuate-a", "type": "actuator", "capabilities": ["motion"], "interface": "bus-v1", "power_w": 3.0, "status": "ready"}
+  ],
+  "tasks": [
+    {"id": "survey", "need": {"perception": 1, "mapping": 1}, "interface": "bus-v1", "power_budget_w": 7.0},
+    {"id": "navigate", "need": {"perception": 1, "planning": 1}, "interface": "bus-v1", "power_budget_w": 7.0},
+    {"id": "move", "need": {"motion": 1}, "interface": "bus-v1", "power_budget_w": 4.0}
+  ]
+}
