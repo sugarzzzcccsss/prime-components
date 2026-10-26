@@ -1,0 +1,69 @@
+{
+  "recorded_at_utc": "2026-10-26T14:08:36.979539+00:00",
+  "classification": "real local processes; synthetic work; no hardware or general speedup conclusion",
+  "parameters": {
+    "workers": 3,
+    "tasks": 12,
+    "iterations_per_task": 20000
+  },
+  "environment": {
+    "python": "3.13.0",
+    "os": "Windows",
+    "cpu_count": 24
+  },
+  "runs": 3,
+  "all_runs_correct": true,
+  "source_hash_encoding": "UTF-8 text, BOM removed and newlines normalized to LF",
+  "source_sha256": {
+    "prime_components/__init__.py": "b5589e98c4dfdb6e4d61e2335fbb04bebe56b9e5013312f85ae29955a7de76e5",
+    "prime_components/__main__.py": "ea7acdd782b81e157f9d03a5d3c592c596c84d5f99b2e6ccb3bb94b589b00d30",
+    "prime_components/core.py": "be6c3e9bbe7e0fbd64ac346de95f9c90102bf8dc1f8bd715029753b1a40ccc4a",
+    "prime_components/portfolio.py": "bea1256a9ab6c22e251f4214a26018c3618b6df24dcef4e82df9ac928330bc09",
+    "prime_components/runtime.py": "d34bc8324d49571d2b5d8abc40940a7cea4d2d3c5a06a059952f503e2b110f27",
+    "prime_components/worker.py": "00eed6f1e7b735c4820ad8802e207696df99b9e14241e01baa1d95558fb183f3",
+    "scripts/record_local_evidence.py": "46cc56c53ed392e6015db4dbbbef198dc8b518157efaf4d292f59ffcf9b8a6e5",
+    "tests/__init__.py": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "tests/test_cli_v02.py": "70b85055696f3945ecfd235bd43fbf8d85f7587fed6164008e56f8b3c4ffca53",
+    "tests/test_portfolio.py": "a8aff20da4d282e4cb1b1b950b220548ab8faaab7823a9f15c25af0a8a9e34f8",
+    "tests/test_reference.py": "dfca5221b8e91ded16ff1277b5eaf1073a90a246c8db317e50893f7c96b232ef",
+    "tests/test_runtime.py": "ae3565f0e4b9a5b90061fdabfff8edf8284f83e5ba0ce5e85250bc14be3d91af"
+  },
+  "scenario_wall_s": {
+    "single_worker": {
+      "observations": [
+        0.47217259999888483,
+        0.3979179000016302,
+        0.47762389999843435
+      ],
+      "median": 0.47217259999888483,
+      "min": 0.3979179000016302,
+      "max": 0.47762389999843435
+    },
+    "multi_worker": {
+      "observations": [
+        0.3427525999977661,
+        0.32355920000190963,
+        0.32075220000115223
+      ],
+      "median": 0.32355920000190963,
+      "min": 0.32075220000115223,
+      "max": 0.3427525999977661
+    },
+    "multi_worker_failure": {
+      "observations": [
+        0.3455571000013151,
+        0.4486021000011533,
+        0.4297742999988259
+      ],
+      "median": 0.4297742999988259,
+      "min": 0.3455571000013151,
+      "max": 0.4486021000011533
+    }
+  },
+  "recovery_to_first_retry_s": [
+    0.020956499996827915,
+    0.0385526000027312,
+    0.054669200002535945
+  ],
+  "negative_case": "no_live_workers_after_injected_failure"
+}

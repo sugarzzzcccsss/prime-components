@@ -1,0 +1,169 @@
+{
+  "model": "finite-inventory sequential symbolic portfolio planner",
+  "scope": "exact enumeration under the supplied finite inventory and symbolic capability, interface, and per-task power constraints; tasks execute sequentially and may reuse instances; no geometry, physical compatibility, or global-world minimum is proven",
+  "input": {
+    "modules": [
+      {
+        "id": "vision-a",
+        "type": "vision",
+        "capabilities": [
+          "inspect"
+        ],
+        "interface": "bus-v1",
+        "power_w": 1.0,
+        "status": "ready"
+      },
+      {
+        "id": "vision-b",
+        "type": "vision",
+        "capabilities": [
+          "inspect"
+        ],
+        "interface": "bus-v1",
+        "power_w": 1.0,
+        "status": "ready"
+      },
+      {
+        "id": "motion-a",
+        "type": "motion",
+        "capabilities": [
+          "move"
+        ],
+        "interface": "bus-v1",
+        "power_w": 1.0,
+        "status": "ready"
+      },
+      {
+        "id": "shared-a",
+        "type": "shared",
+        "capabilities": [
+          "inspect",
+          "move"
+        ],
+        "interface": "bus-v1",
+        "power_w": 1.5,
+        "status": "ready"
+      },
+      {
+        "id": "shared-b",
+        "type": "shared",
+        "capabilities": [
+          "inspect",
+          "move"
+        ],
+        "interface": "bus-v1",
+        "power_w": 1.5,
+        "status": "ready"
+      },
+      {
+        "id": "universal",
+        "type": "universal",
+        "capabilities": [
+          "inspect",
+          "move"
+        ],
+        "interface": "bus-v1",
+        "power_w": 5.0,
+        "status": "ready"
+      }
+    ],
+    "tasks": [
+      {
+        "id": "inspection",
+        "need": {
+          "inspect": 2
+        },
+        "interface": "bus-v1",
+        "power_budget_w": 3.0
+      },
+      {
+        "id": "movement",
+        "need": {
+          "move": 1
+        },
+        "interface": "bus-v1",
+        "power_budget_w": 2.0
+      }
+    ]
+  },
+  "individual_plans": [
+    {
+      "feasible": true,
+      "task_id": "inspection",
+      "selected": [
+        "vision-a",
+        "vision-b"
+      ],
+      "types": [
+        "vision"
+      ],
+      "power_w": 2.0
+    },
+    {
+      "feasible": true,
+      "task_id": "movement",
+      "selected": [
+        "motion-a"
+      ],
+      "types": [
+        "motion"
+      ],
+      "power_w": 1.0
+    }
+  ],
+  "individual_inventory": {
+    "selected": [
+      "motion-a",
+      "vision-a",
+      "vision-b"
+    ],
+    "types": [
+      "motion",
+      "vision"
+    ],
+    "power_w": 3.0
+  },
+  "feasible": true,
+  "selected": [
+    "shared-a",
+    "shared-b"
+  ],
+  "types": [
+    "shared"
+  ],
+  "inventory_power_w": 3.0,
+  "task_plans": [
+    {
+      "feasible": true,
+      "task_id": "inspection",
+      "selected": [
+        "shared-a",
+        "shared-b"
+      ],
+      "types": [
+        "shared"
+      ],
+      "power_w": 3.0
+    },
+    {
+      "feasible": true,
+      "task_id": "movement",
+      "selected": [
+        "shared-a"
+      ],
+      "types": [
+        "shared"
+      ],
+      "power_w": 1.5
+    }
+  ],
+  "objective": {
+    "type_count": 1,
+    "instance_count": 2,
+    "inventory_power_w": 3.0,
+    "ids": [
+      "shared-a",
+      "shared-b"
+    ]
+  }
+}

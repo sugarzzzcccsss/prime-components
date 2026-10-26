@@ -1,0 +1,395 @@
+{
+  "model": "independent Python worker processes over loopback HTTP/JSON; central coordinator baseline",
+  "status": "failed",
+  "all_correct": false,
+  "scope": "synthetic deterministic SHA-256 tasks only; no robot control, decentralized coordination, or exactly-once execution; leases are reclaimed only after confirmed worker-process exit, with no TTL/hung-worker/network-partition detector",
+  "environment": {
+    "python": "3.13.0",
+    "os": "Windows",
+    "cpu_count": 24
+  },
+  "deadline": {
+    "timeout_s": 10.0,
+    "scope": "shared across all runtime scenarios and worker startup; bounded expected-output oracle excluded"
+  },
+  "parameters": {
+    "workers": 2,
+    "tasks": 2,
+    "iterations_per_task": 100,
+    "inject_failure": true,
+    "fail_all_workers_test_hook": true,
+    "oracle_validation_s": 0.00011950000043725595,
+    "work_cap_tasks_times_iterations": 500000
+  },
+  "work_definition": "Repeated SHA-256: digest = SHA256(previous_digest || uint32_be(iteration)); task seed derived deterministically from task id.",
+  "timing_notes": {
+    "wall_s": "startup-inclusive scenario time to all accepted task results; one observation, not a speedup claim",
+    "dispatch_to_complete_s": "first task claim to all accepted task results",
+    "failure_recovery": "interval starts at failure_injection_requested before terminate and ends at accepted retry/completion; harness recovery only, not physical MTTR"
+  },
+  "scenarios": {
+    "single_worker": {
+      "status": "completed",
+      "workers": 1,
+      "workers_started": 1,
+      "workers_hello_ready": 1,
+      "workers_claimed": [
+        "worker-0000"
+      ],
+      "workers_completed": [
+        "worker-0000"
+      ],
+      "cleanup": {
+        "all_workers_stopped": true,
+        "server_thread_stopped": true
+      },
+      "wall_s": 0.21733450000101584,
+      "dispatch_to_complete_s": 0.029646799997863127,
+      "failure_to_first_retry_success_s": null,
+      "failure_to_all_complete_s": null,
+      "results": {
+        "task-0000": "a8db308b9c3dd172fa53faad0eb371c9940911c5f779fff8789312bb407a2df9",
+        "task-0001": "f7655f2e8d628449e3565776d9d7420d782ee7b2128439e49cd6255b12a9b911"
+      },
+      "task_results": {
+        "task-0000": {
+          "digest": "a8db308b9c3dd172fa53faad0eb371c9940911c5f779fff8789312bb407a2df9",
+          "attempt": 1
+        },
+        "task-0001": {
+          "digest": "f7655f2e8d628449e3565776d9d7420d782ee7b2128439e49cd6255b12a9b911",
+          "attempt": 1
+        }
+      },
+      "events": [
+        {
+          "seq": 1,
+          "t_rel_s": 0.0007427999989886303,
+          "worker": "worker-0000",
+          "event": "worker_registered"
+        },
+        {
+          "seq": 2,
+          "t_rel_s": 0.1588104000002204,
+          "worker": "worker-0000",
+          "event": "worker_http_hello"
+        },
+        {
+          "seq": 3,
+          "t_rel_s": 0.1640095000002475,
+          "worker": "coordinator",
+          "event": "worker_pool_claim_gate_released",
+          "ready_workers": 1
+        },
+        {
+          "seq": 4,
+          "t_rel_s": 0.1876854000001913,
+          "worker": "worker-0000",
+          "event": "task_leased",
+          "task_id": "task-0000",
+          "attempt": 1
+        },
+        {
+          "seq": 5,
+          "t_rel_s": 0.20305500000176835,
+          "worker": "worker-0000",
+          "event": "result_accepted",
+          "task_id": "task-0000",
+          "attempt": 1
+        },
+        {
+          "seq": 6,
+          "t_rel_s": 0.21614509999926668,
+          "worker": "worker-0000",
+          "event": "task_leased",
+          "task_id": "task-0001",
+          "attempt": 1
+        },
+        {
+          "seq": 7,
+          "t_rel_s": 0.21732600000177626,
+          "worker": "worker-0000",
+          "event": "result_accepted",
+          "task_id": "task-0001",
+          "attempt": 1
+        },
+        {
+          "seq": 8,
+          "t_rel_s": 0.21756190000087372,
+          "worker": "worker-0000",
+          "event": "worker_shutdown_requested"
+        },
+        {
+          "seq": 9,
+          "t_rel_s": 0.2206322000020009,
+          "worker": "worker-0000",
+          "event": "worker_process_exit_confirmed"
+        }
+      ],
+      "matches_single_worker": true,
+      "correct_against_oracle": true
+    },
+    "multi_worker": {
+      "status": "completed",
+      "workers": 2,
+      "workers_started": 2,
+      "workers_hello_ready": 2,
+      "workers_claimed": [
+        "worker-0001"
+      ],
+      "workers_completed": [
+        "worker-0001"
+      ],
+      "cleanup": {
+        "all_workers_stopped": true,
+        "server_thread_stopped": true
+      },
+      "wall_s": 0.2249134999983653,
+      "dispatch_to_complete_s": 0.02474910000091768,
+      "failure_to_first_retry_success_s": null,
+      "failure_to_all_complete_s": null,
+      "results": {
+        "task-0000": "a8db308b9c3dd172fa53faad0eb371c9940911c5f779fff8789312bb407a2df9",
+        "task-0001": "f7655f2e8d628449e3565776d9d7420d782ee7b2128439e49cd6255b12a9b911"
+      },
+      "task_results": {
+        "task-0000": {
+          "digest": "a8db308b9c3dd172fa53faad0eb371c9940911c5f779fff8789312bb407a2df9",
+          "attempt": 1
+        },
+        "task-0001": {
+          "digest": "f7655f2e8d628449e3565776d9d7420d782ee7b2128439e49cd6255b12a9b911",
+          "attempt": 1
+        }
+      },
+      "events": [
+        {
+          "seq": 1,
+          "t_rel_s": 0.0008735000010346994,
+          "worker": "worker-0000",
+          "event": "worker_registered"
+        },
+        {
+          "seq": 2,
+          "t_rel_s": 0.009706299999379553,
+          "worker": "worker-0001",
+          "event": "worker_registered"
+        },
+        {
+          "seq": 3,
+          "t_rel_s": 0.17051939999873866,
+          "worker": "worker-0000",
+          "event": "worker_http_hello"
+        },
+        {
+          "seq": 4,
+          "t_rel_s": 0.1709244999983639,
+          "worker": "worker-0001",
+          "event": "worker_http_hello"
+        },
+        {
+          "seq": 5,
+          "t_rel_s": 0.171889099998225,
+          "worker": "coordinator",
+          "event": "worker_pool_claim_gate_released",
+          "ready_workers": 2
+        },
+        {
+          "seq": 6,
+          "t_rel_s": 0.20016010000108508,
+          "worker": "worker-0001",
+          "event": "task_leased",
+          "task_id": "task-0000",
+          "attempt": 1
+        },
+        {
+          "seq": 7,
+          "t_rel_s": 0.20202100000096834,
+          "worker": "worker-0001",
+          "event": "result_accepted",
+          "task_id": "task-0000",
+          "attempt": 1
+        },
+        {
+          "seq": 8,
+          "t_rel_s": 0.2231193000006897,
+          "worker": "worker-0001",
+          "event": "task_leased",
+          "task_id": "task-0001",
+          "attempt": 1
+        },
+        {
+          "seq": 9,
+          "t_rel_s": 0.2249018000002252,
+          "worker": "worker-0001",
+          "event": "result_accepted",
+          "task_id": "task-0001",
+          "attempt": 1
+        },
+        {
+          "seq": 10,
+          "t_rel_s": 0.22515690000000177,
+          "worker": "worker-0000",
+          "event": "worker_shutdown_requested"
+        },
+        {
+          "seq": 11,
+          "t_rel_s": 0.22516130000076373,
+          "worker": "worker-0001",
+          "event": "worker_shutdown_requested"
+        },
+        {
+          "seq": 12,
+          "t_rel_s": 0.22893670000121347,
+          "worker": "worker-0000",
+          "event": "worker_process_exit_confirmed"
+        },
+        {
+          "seq": 13,
+          "t_rel_s": 0.2289481000007072,
+          "worker": "worker-0001",
+          "event": "worker_process_exit_confirmed"
+        }
+      ],
+      "matches_single_worker": true,
+      "correct_against_oracle": true
+    },
+    "multi_worker_failure": {
+      "status": "failed",
+      "workers": 2,
+      "workers_started": 2,
+      "workers_hello_ready": 2,
+      "workers_claimed": [
+        "worker-0000",
+        "worker-0001"
+      ],
+      "workers_completed": [
+        "worker-0001"
+      ],
+      "cleanup": {
+        "all_workers_stopped": true,
+        "server_thread_stopped": true
+      },
+      "wall_s": 0.2311294999999518,
+      "dispatch_to_complete_s": null,
+      "failure_to_first_retry_success_s": null,
+      "failure_to_all_complete_s": null,
+      "results": {
+        "task-0001": "f7655f2e8d628449e3565776d9d7420d782ee7b2128439e49cd6255b12a9b911"
+      },
+      "task_results": {
+        "task-0001": {
+          "digest": "f7655f2e8d628449e3565776d9d7420d782ee7b2128439e49cd6255b12a9b911",
+          "attempt": 1
+        }
+      },
+      "events": [
+        {
+          "seq": 1,
+          "t_rel_s": 0.0007999999979801942,
+          "worker": "worker-0000",
+          "event": "worker_registered"
+        },
+        {
+          "seq": 2,
+          "t_rel_s": 0.011510699998325435,
+          "worker": "worker-0001",
+          "event": "worker_registered"
+        },
+        {
+          "seq": 3,
+          "t_rel_s": 0.1514915999978257,
+          "worker": "worker-0000",
+          "event": "worker_http_hello"
+        },
+        {
+          "seq": 4,
+          "t_rel_s": 0.17780239999774494,
+          "worker": "worker-0001",
+          "event": "worker_http_hello"
+        },
+        {
+          "seq": 5,
+          "t_rel_s": 0.18010399999911897,
+          "worker": "coordinator",
+          "event": "worker_pool_claim_gate_released",
+          "ready_workers": 2
+        },
+        {
+          "seq": 6,
+          "t_rel_s": 0.20402909999756957,
+          "worker": "worker-0001",
+          "event": "task_leased",
+          "task_id": "task-0001",
+          "attempt": 1
+        },
+        {
+          "seq": 7,
+          "t_rel_s": 0.20561839999936637,
+          "worker": "worker-0000",
+          "event": "task_leased",
+          "task_id": "task-0000",
+          "attempt": 1
+        },
+        {
+          "seq": 8,
+          "t_rel_s": 0.20596409999780008,
+          "worker": "worker-0001",
+          "event": "result_accepted",
+          "task_id": "task-0001",
+          "attempt": 1
+        },
+        {
+          "seq": 9,
+          "t_rel_s": 0.2066023999977915,
+          "worker": "worker-0000",
+          "event": "failure_worker_at_precompute_barrier",
+          "task_id": "task-0000",
+          "attempt": 1
+        },
+        {
+          "seq": 10,
+          "t_rel_s": 0.20683920000010403,
+          "worker": "worker-0000",
+          "event": "failure_injection_requested",
+          "task_id": "task-0000"
+        },
+        {
+          "seq": 11,
+          "t_rel_s": 0.2068440000002738,
+          "worker": "worker-0000",
+          "event": "worker_shutdown_requested"
+        },
+        {
+          "seq": 12,
+          "t_rel_s": 0.2068452999992587,
+          "worker": "worker-0001",
+          "event": "worker_shutdown_requested"
+        },
+        {
+          "seq": 13,
+          "t_rel_s": 0.21018840000033379,
+          "worker": "worker-0000",
+          "event": "worker_process_exit_confirmed"
+        },
+        {
+          "seq": 14,
+          "t_rel_s": 0.21019239999804995,
+          "worker": "worker-0000",
+          "event": "lease_reclaimed_after_confirmed_process_exit",
+          "task_id": "task-0000",
+          "attempt": 1
+        },
+        {
+          "seq": 15,
+          "t_rel_s": 0.2129985999999917,
+          "worker": "worker-0001",
+          "event": "worker_process_exit_confirmed"
+        }
+      ],
+      "reason": "no_live_workers_after_injected_failure",
+      "matches_single_worker": false,
+      "correct_against_oracle": false
+    }
+  }
+}

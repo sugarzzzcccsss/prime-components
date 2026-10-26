@@ -161,15 +161,19 @@ def compute_time(params: Any) -> dict[str, float | int]:
 
 def load_json(path: str | Path) -> Any:
     try:
-        return json.loads(Path(path).read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+        return json.loads(Path(path).read_text(encoding="utf-8-sig"))
+    except (OSError, UnicodeError, ValueError) as exc:
         raise ValidationError(f"cannot read JSON from {path}: {exc}") from exc
 
 
 def write_json(path: str | Path, data: Any) -> None:
     target = Path(path)
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(json.dumps(data, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    try:
+        payload = json.dumps(data, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(payload, encoding="utf-8")
+    except (OSError, ValueError) as exc:
+        raise ValidationError(f"cannot write JSON to {path}: {exc}") from exc
 
 
 def _catalog(path: str | Path | None = None) -> dict[str, Any]:
@@ -207,7 +211,10 @@ def communication_examples() -> dict[str, Any]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="prime_components")
+    parser = argparse.ArgumentParser(
+        prog="prime_components",
+        description="Modular component research: symbolic planning and local process experiments.",
+    )
     sub = parser.add_subparsers(dest="command", required=True)
     for command in ("demo", "compute"):
         child = sub.add_parser(command)
@@ -217,11 +224,21 @@ def main(argv: list[str] | None = None) -> int:
             child.add_argument("--fail", default="sense-a", help="module id to mark fault; default: sense-a")
         else:
             child.add_argument("--input", help="single communication-parameter JSON object")
+    portfolio_parser = sub.add_parser("portfolio", help="choose shared inventory for sequential symbolic tasks")
+    portfolio_parser.add_argument("--input", default=str(Path(__file__).parent.parent / "examples" / "portfolio.json"))
+    portfolio_parser.add_argument("--output", required=True)
+    runtime_parser = sub.add_parser("runtime", help="compare real loopback worker processes with fault injection")
+    runtime_parser.add_argument("--workers", type=int, default=3)
+    runtime_parser.add_argument("--tasks", type=int, default=12)
+    runtime_parser.add_argument("--iterations", type=int, default=20000)
+    runtime_parser.add_argument("--timeout", type=float, default=30.0, help="whole-experiment deadline in seconds")
+    runtime_parser.add_argument("--output", required=True)
     args = parser.parse_args(argv)
+    exit_code = 0
     try:
         if args.command == "demo":
             result = demo(args.catalog, args.fail)
-        else:
+        elif args.command == "compute":
             result = {"model": "homogeneous-node communication estimate; assumed inputs",
                       "formula": "T_n=T1*(f+(1-f)/n)+rounds*(latency_ms/1000+payload_mb/bandwidth_MBps); n=1 communication=0",
                       "units": "payload and bandwidth use decimal MB; latency in ms; time in seconds",
@@ -229,10 +246,20 @@ def main(argv: list[str] | None = None) -> int:
             if args.input:
                 supplied = load_json(args.input)
                 result["input_case"] = {"parameters": validate_compute(supplied), **compute_time(supplied)}
+        elif args.command == "portfolio":
+            from .portfolio import choose_portfolio
+            result = choose_portfolio(load_json(args.input))
+            exit_code = 0 if result["feasible"] else 1
+        else:
+            from .runtime import run_experiment
+            result = run_experiment(workers=args.workers, tasks=args.tasks,
+                                    iterations=args.iterations, timeout_s=args.timeout)
+            exit_code = 0 if result["all_correct"] else 1
         write_json(args.output, result)
     except ValidationError as exc:
         parser.error(str(exc))
-    return 0
+    print(f"{args.command}: {'ok' if exit_code == 0 else 'not completed'}; report: {args.output}")
+    return exit_code
 
 
 if __name__ == "__main__":

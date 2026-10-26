@@ -1,0 +1,14 @@
+{
+  "modules": [
+    {"id": "vision-a", "type": "vision", "capabilities": ["inspect"], "interface": "bus-v1", "power_w": 1.0, "status": "ready"},
+    {"id": "vision-b", "type": "vision", "capabilities": ["inspect"], "interface": "bus-v1", "power_w": 1.0, "status": "ready"},
+    {"id": "motion-a", "type": "motion", "capabilities": ["move"], "interface": "bus-v1", "power_w": 1.0, "status": "ready"},
+    {"id": "shared-a", "type": "shared", "capabilities": ["inspect", "move"], "interface": "bus-v1", "power_w": 1.5, "status": "ready"},
+    {"id": "shared-b", "type": "shared", "capabilities": ["inspect", "move"], "interface": "bus-v1", "power_w": 1.5, "status": "ready"},
+    {"id": "universal", "type": "universal", "capabilities": ["inspect", "move"], "interface": "bus-v1", "power_w": 5.0, "status": "ready"}
+  ],
+  "tasks": [
+    {"id": "inspection", "need": {"inspect": 2}, "interface": "bus-v1", "power_budget_w": 3.0},
+    {"id": "movement", "need": {"move": 1}, "interface": "bus-v1", "power_budget_w": 2.0}
+  ]
+}
